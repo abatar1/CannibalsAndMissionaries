@@ -12,16 +12,16 @@ namespace CannibalsAndMissionaries
 
         private readonly List<State> _possibleMoves = new List<State>
         {
-            new State(1, 0, 1),
-            new State(2, 0, 1),
-            new State(0, 1, 1),
-            new State(0, 2, 1),
-            new State(1, 1, 1)
+            new State(1, 0),
+            new State(2, 0),
+            new State(0, 1),
+            new State(0, 2),
+            new State(1, 1)
         };
 
-        public Node(State state = null, Node parent = null , bool toGoal = true)
+        public Node(State state = null, Node parent = null, bool toGoal = true)
         {
-            _state = state ?? new State(3, 3, 1);
+            _state = state ?? new State(3, 3);
             _parent = parent;
             _toGoal = toGoal;
         }
@@ -41,7 +41,7 @@ namespace CannibalsAndMissionaries
             }
         }
         
-        private IEnumerable<Node> PathToRoot
+        public IEnumerable<Node> PathToRoot
         {
             get
             {
@@ -59,7 +59,7 @@ namespace CannibalsAndMissionaries
             }
         }
 
-        public Node FindGoal()
+        public Node FindSolution()
         {
             var examined = new List<Node>();
             var queue = new Queue<Node>(Children);
@@ -79,7 +79,9 @@ namespace CannibalsAndMissionaries
             }
         }
 
-        public IEnumerable<State> Solution
+        public string Direction => _toGoal ? "->" : "<-";
+
+        public IEnumerable<State> Statements
         {
             get
             {
@@ -90,7 +92,13 @@ namespace CannibalsAndMissionaries
 
         public bool Equals(Node other)
         {
-            return other != null && _state.Equals(other._state) && _toGoal == other._toGoal && _parent == other._parent;
+            return other != null && _state.Equals(other._state) && _toGoal == other._toGoal;
+        }
+
+        public string Formatted(State boat = null)
+        {
+            var dirStr = boat == null ? "==" : Direction + "B" + boat + Direction;
+            return "L" + _state + dirStr + "R" + _state.Reverse();
         }
     }
 }

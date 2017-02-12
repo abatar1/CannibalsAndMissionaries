@@ -8,12 +8,14 @@ namespace CannibalsAndMissionaries
         private static void Main(string[] args)
         {           
             var node = new Node();
-            var solution = node.FindGoal().Solution.Reverse().ToArray();
-            var boat = solution.Zip(solution.Skip(1), (a, b) => (b - a).Abs()).ToArray();            
-            for(var i = 0; i < solution.Length; i++)
+            var solution = node.FindSolution();
+            var nodeThree = solution.PathToRoot.Reverse().ToArray();
+            var statements = solution.Statements.Reverse().ToArray();
+            var boat = statements.Zip(statements.Skip(1), (a, b) => (b - a).Abs()).ToArray();    
+                    
+            for (var i = 0; i < statements.Length; i++)
             {
-                if (i == solution.Length - 1) Console.WriteLine("L" + solution[i] + solution[i].Direction + "R" + solution[i].Reverse());
-                else Console.WriteLine("L" + solution[i] + solution[i].Direction + "B" + boat[i] + solution[i].Direction + "R" + solution[i].Reverse());
+                Console.WriteLine(nodeThree[i].Formatted(i == nodeThree.Length - 1 ? null : boat[i]));
             }
         }
     }

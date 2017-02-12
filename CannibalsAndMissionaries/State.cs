@@ -5,14 +5,12 @@ namespace CannibalsAndMissionaries
     public class State : IEquatable<State>
     {
         public int Missioners { get; }
-        public int Cannibals { get; }
-        public int Boat { get; }
+        public int Cannibals { get; }      
 
-        public State(int missioners, int cannibals, int boat)
+        public State(int missioners, int cannibals)
         {
             Missioners = missioners;
             Cannibals = cannibals;
-            Boat = boat;
         }
 
         public bool IsValid
@@ -27,23 +25,21 @@ namespace CannibalsAndMissionaries
             }
         }
 
-        public bool IsGoal => Missioners == 0 && Cannibals == 0 && Boat == 0;
+        public bool IsGoal => Missioners == 0 && Cannibals == 0;
 
-        public State Reverse() => new State(3 - Missioners, 3 - Cannibals, 1 - Boat);
+        public State Reverse() => new State(3 - Missioners, 3 - Cannibals);
 
-        public State Abs() => new State(Math.Abs(Missioners), Math.Abs(Cannibals), Math.Abs(Boat));
+        public State Abs() => new State(Math.Abs(Missioners), Math.Abs(Cannibals));
 
         public static State operator -(State s1, State s2)
-        {
-            return new State(s1.Missioners - s2.Missioners, s1.Cannibals - s2.Cannibals, s1.Boat - s2.Boat);
+        {           
+            return new State(s1.Missioners - s2.Missioners, s1.Cannibals - s2.Cannibals);
         }
 
         public static State operator +(State s1, State s2)
         {
-            return new State(s1.Missioners + s2.Missioners, s1.Cannibals + s2.Cannibals, s1.Boat + s2.Boat);
+            return new State(s1.Missioners + s2.Missioners, s1.Cannibals + s2.Cannibals);
         }
-
-        public string Direction => Boat == 1 ? "->" : "<-";
 
         public override string ToString()
         {
@@ -52,7 +48,7 @@ namespace CannibalsAndMissionaries
 
         public bool Equals(State other)
         {
-            return other != null && Missioners == other.Missioners && Cannibals == other.Cannibals && Boat == other.Boat;
+            return other != null && Missioners == other.Missioners && Cannibals == other.Cannibals;
         }
     }
 }
