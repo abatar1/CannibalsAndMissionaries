@@ -46,10 +46,15 @@ namespace CannibalsAndMissionaries
             get
             {
                 var node = this;
-                while (node._parent != null)
+                while (true)
                 {
                     yield return node;
                     node = node._parent;
+                    if (node._parent == null)
+                    {
+                        yield return node;
+                        break;
+                    }
                 }
             }
         }
