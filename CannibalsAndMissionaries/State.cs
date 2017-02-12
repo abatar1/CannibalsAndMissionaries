@@ -4,6 +4,8 @@ namespace CannibalsAndMissionaries
 {
     public class State : IEquatable<State>
     {
+        private const int MaxPeople = 3;
+
         public int Missioners { get; }
         public int Cannibals { get; }      
 
@@ -17,9 +19,9 @@ namespace CannibalsAndMissionaries
         {
             get
             {
-                var correctManipulation = Missioners >= 0 && Cannibals >= 0 && 3 - Missioners >= 0 && 3 - Cannibals >= 0;
+                var correctManipulation = Missioners >= 0 && Cannibals >= 0 && MaxPeople - Missioners >= 0 && MaxPeople - Cannibals >= 0;
                 var wrongSide = Missioners == 0 || Missioners >= Cannibals;
-                var rightSide = 3 - Missioners == 0 || 3 - Missioners >= 3 - Cannibals;
+                var rightSide = MaxPeople - Missioners == 0 || MaxPeople - Missioners >= MaxPeople - Cannibals;
 
                 return correctManipulation && wrongSide && rightSide;
             }
@@ -27,7 +29,7 @@ namespace CannibalsAndMissionaries
 
         public bool IsGoal => Missioners == 0 && Cannibals == 0;
 
-        public State Reverse() => new State(3 - Missioners, 3 - Cannibals);
+        public State Reverse() => new State(MaxPeople - Missioners, MaxPeople - Cannibals);
 
         public State Abs() => new State(Math.Abs(Missioners), Math.Abs(Cannibals));
 
