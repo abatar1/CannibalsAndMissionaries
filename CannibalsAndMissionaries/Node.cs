@@ -94,6 +94,7 @@ namespace CannibalsAndMissionaries
         } 
 
         // Преобразование элементов PathToRoot из Node в State.
+
         public IEnumerable<State> Statements
         {
             get
