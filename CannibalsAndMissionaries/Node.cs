@@ -10,7 +10,8 @@ namespace CannibalsAndMissionaries
         private readonly Node _parent;
         private readonly bool _toGoal;
 
-        private readonly List<State> _possibleMoves = new List<State>
+        // Все возможные ходы
+        private static readonly IReadOnlyList<State> PossibleMoves = new List<State>
         {
             new State(1, 0),
             new State(2, 0),
@@ -19,28 +20,29 @@ namespace CannibalsAndMissionaries
             new State(1, 1)
         };
 
+        // Конструктор класса
         public Node(State state = null, Node parent = null, bool toGoal = true)
         {
-            _state = state ?? new State(3, 3);
+            _state = state ?? new State(3, 3); // Начальное состояние.
             _parent = parent;
             _toGoal = toGoal;
         }
 
-        private Node Transition(State move)
+        // Метод движения
+        private Node Transition(State move) 
         {
             return new Node(_toGoal ? _state - move : _state + move, this, !_toGoal);
         }
 
-        private IEnumerable<Node> Children
+        // Берем возможные ходы, применяем их все к вершине посредством Transition и выбираем те, которые удовлетворяют условию isvalid
+        private IEnumerable<Node> FindChildren()
         {
-            get
-            {
-                return _possibleMoves
+                return PossibleMoves
                     .Select(Transition)
-                    .Where(node => node._state.IsValid);
-            }
+                    .Where(node => node._state.IsValid);           
         }
-        
+
+        // Возвращаем список из вершин от итоговой до рута.
         public IEnumerable<Node> PathToRoot
         {
             get
@@ -61,26 +63,37 @@ namespace CannibalsAndMissionaries
 
         public Node FindSolution()
         {
-            var examined = new List<Node>();
-            var queue = new Queue<Node>(Children);
+            var examined = new HashSet<Node>(); // пустой список
+            var queue = new Queue<Node>(FindChildren()); // очередь
 
             while (true)
             {
+                // Читаем и удаляем элемент из головы очереди.
                 var node = queue.Dequeue();
 
-                if (examined.Contains(node)) continue;
-                examined.Add(node);
+                // Если вершина содержится в examined, то continue, если не содержится, то добавляем её.
+                if (!examined.Add(node)) continue;
 
+                // Если вершина удовлетворяет IsGoal, то возвращаем вершину.
                 if (node._state.IsGoal) return node;
-                foreach (var child in node.Children)
+
+                // Иначе все child из node.FindChildren() добавляем в очередь.
+                foreach (var child in node.FindChildren())
                 {
                     queue.Enqueue(child);
                 }
             }
         }
 
-        public string Direction => _toGoal ? "->" : "<-";
+        public string Direction
+        {
+            get
+            {
+                return _toGoal ? "->" : "<-";
+            }
+        } 
 
+        // Преобразование элементов PathToRoot из Node в State.
         public IEnumerable<State> Statements
         {
             get
@@ -95,9 +108,10 @@ namespace CannibalsAndMissionaries
             return other != null && _state.Equals(other._state) && _toGoal == other._toGoal;
         }
 
+        // Метод форматированного вывода.
         public string Formatted(State boat = null)
         {
-            var dirStr = boat == null ? "==" : Direction + "B" + boat + Direction;
+            var dirStr = boat == null ? "     ==     " : Direction + "B" + boat + Direction;
             return "L" + _state + dirStr + "R" + _state.Reverse();
         }
     }
