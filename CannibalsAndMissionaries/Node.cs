@@ -21,8 +21,7 @@ namespace CannibalsAndMissionaries
         };
 
         // Конструктор класса
-        
-        public Node(State state = null, Node parent = null, bool toGoal = true) 
+        public Node(State state = null, Node parent = null, bool toGoal = true)
         {
             _state = state ?? new State(3, 3); // Начальное состояние.
             _parent = parent;
@@ -66,7 +65,7 @@ namespace CannibalsAndMissionaries
         {
             var examined = new HashSet<Node>(); // пустой список
             var queue = new Queue<Node>(FindChildren()); // очередь
-//цикл
+
             while (true)
             {
                 // Читаем и удаляем элемент из головы очереди.
